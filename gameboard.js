@@ -80,7 +80,9 @@ class Gameboard {
 		}
 	}
 
-	allShipsSunk() {}
+	allShipsSunk() {
+		return this.ships.every((ship) => ship.isSunk());
+	}
 }
 
 module.exports = Gameboard;
