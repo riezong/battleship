@@ -151,3 +151,55 @@ describe('Gameboard receiveAttack method', () => {
 		expect(board.missedAttacks.length).toBe(0); // No changes
 	});
 });
+
+describe('Gameboard allShipsSunk method', () => {
+	let board;
+	let ship1;
+	let ship2;
+
+	beforeEach(() => {
+		board = new Gameboard(5); // Small board for easy testing
+		// Place two ships: a 2-length and a 3-length, horizontally
+		ship1 = board.placeShip(2, 0, 0); // At (0,0), (0,1)
+		ship2 = board.placeShip(3, 1, 0); // At (1,0), (1,1), (1,2)
+	});
+
+	// Test 1: Should return false when no ships are hit
+	test('should return false if no ships have been hit', () => {
+		expect(board.allShipsSunk()).toBe(false);
+	});
+
+	// Test 2: Should return false when some ships are hit but not all sunk
+	test('should return false if some ships are hit but not all are sunk', () => {
+		board.receiveAttack(0, 0); // Hit ship1 once
+		expect(board.allShipsSunk()).toBe(false); // ship1 not sunk yet, ship2 untouched
+	});
+
+	// Test 3: Should return false when one ship is sunk but others remain afloat
+	test('should return false if one ship is sunk but others are not', () => {
+		// Sink ship1
+		board.receiveAttack(0, 0);
+		board.receiveAttack(0, 1);
+		// ship2 is still afloat
+		expect(board.allShipsSunk()).toBe(false);
+	});
+
+	// Test 4: Should return true when all ships are sunk
+	test('should return true when all ships have been sunk', () => {
+		// Sink ship1
+		board.receiveAttack(0, 0);
+		board.receiveAttack(0, 1);
+		// Sink ship2
+		board.receiveAttack(1, 0);
+		board.receiveAttack(1, 1);
+		board.receiveAttack(1, 2);
+
+		expect(board.allShipsSunk()).toBe(true);
+	});
+
+	// Test 5: Should return true if there are no ships on the board (edge case)
+	test('should return true if there are no ships on the board', () => {
+		const emptyBoard = new Gameboard(5); // A board with no ships placed
+		expect(emptyBoard.allShipsSunk()).toBe(true); // No ships to sink, so technically all are "sunk"
+	});
+});
