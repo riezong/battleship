@@ -49,8 +49,35 @@ class Gameboard {
 	}
 
 	receiveAttack(xPos, yPos) {
-		if (this.grid[xPos][yPos]) {
-		} else return false;
+		if (
+			xPos < 0 ||
+			xPos >= this.gridSize ||
+			yPos < 0 ||
+			yPos >= this.gridSize
+		) {
+			console.error(`Attack out of bounds: [${xPos}, ${yPos}].`);
+			return null;
+		}
+
+		const targetCell = this.grid[xPos][yPos];
+
+		if (targetCell === 'hit' || targetCell === 'miss') {
+			console.warn(`Coordinate [${xPos}, ${yPos}] has already been attacked.`);
+			return null;
+		}
+
+		if (targetCell !== null) {
+			const hitShip = targetCell;
+			hitShip.hit();
+			this.grid[xPos][yPos] = 'hit';
+			console.log('Target ship hit!');
+			return true;
+		} else {
+			this.grid[xPos][yPos] = 'miss';
+			this.missedAttacks.push([xPos, yPos]);
+			console.log('Missed!');
+			return false;
+		}
 	}
 
 	allShipsSunk() {}
