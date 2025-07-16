@@ -12,3 +12,5 @@ class Ship {
 		return this.noTimesHit >= this.length;
 	}
 }
+
+module.exports = Ship;
