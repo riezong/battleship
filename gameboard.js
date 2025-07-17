@@ -86,3 +86,5 @@ class Gameboard {
 }
 
 module.exports = Gameboard;
+
+export default Gameboard;
