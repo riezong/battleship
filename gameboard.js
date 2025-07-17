@@ -1,4 +1,4 @@
-import Ship from './battleship';
+import Ship from './battleship.js';
 
 class Gameboard {
 	constructor(gridSize) {
@@ -14,25 +14,25 @@ class Gameboard {
 		}
 	}
 
-	placeShip(length, xPos, yPos) {
+	placeShip(length, row, column) {
 		if (
-			yPos + length > this.gridSize ||
-			yPos < 0 ||
-			xPos < 0 ||
-			xPos >= this.gridSize
+			column + length > this.gridSize ||
+			column < 0 ||
+			row < 0 ||
+			row >= this.gridSize
 		) {
 			console.error(
-				`Cannot place ship: Out of bounds at [${xPos}, ${yPos}] for length ${length}.`
+				`Cannot place ship: Out of bounds at [${row}, ${column}] for length ${length}.`
 			);
 			return null;
 		}
 
 		for (let i = 0; i < length; i++) {
-			if (this.grid[xPos + i][yPos] !== null) {
+			if (this.grid[row][column + i] !== null) {
 				console.error(
 					`Cannot place ship: Cells are already occupied at [${
-						xPos + i
-					}, ${yPos}].`
+						row + i
+					}, ${column}].`
 				);
 				return null;
 			}
@@ -42,39 +42,39 @@ class Gameboard {
 		this.ships.push(newShip);
 
 		for (let i = 0; i < length; i++) {
-			this.grid[xPos][yPos + i] = newShip;
+			this.grid[row][column + i] = newShip;
 		}
 
 		return newShip;
 	}
 
-	receiveAttack(xPos, yPos) {
+	receiveAttack(row, column) {
 		if (
-			xPos < 0 ||
-			xPos >= this.gridSize ||
-			yPos < 0 ||
-			yPos >= this.gridSize
+			row < 0 ||
+			row >= this.gridSize ||
+			column < 0 ||
+			column >= this.gridSize
 		) {
-			console.error(`Attack out of bounds: [${xPos}, ${yPos}].`);
+			console.error(`Attack out of bounds: [${row}, ${column}].`);
 			return null;
 		}
 
-		const targetCell = this.grid[xPos][yPos];
+		const targetCell = this.grid[row][column];
 
 		if (targetCell === 'hit' || targetCell === 'miss') {
-			console.warn(`Coordinate [${xPos}, ${yPos}] has already been attacked.`);
+			console.warn(`Coordinate [${row}, ${column}] has already been attacked.`);
 			return null;
 		}
 
 		if (targetCell !== null) {
 			const hitShip = targetCell;
 			hitShip.hit();
-			this.grid[xPos][yPos] = 'hit';
+			this.grid[row][column] = 'hit';
 			console.log('Target ship hit!');
 			return true;
 		} else {
-			this.grid[xPos][yPos] = 'miss';
-			this.missedAttacks.push([xPos, yPos]);
+			this.grid[row][column] = 'miss';
+			this.missedAttacks.push([row, column]);
 			console.log('Missed!');
 			return false;
 		}
@@ -85,6 +85,6 @@ class Gameboard {
 	}
 }
 
-module.exports = Gameboard;
+// module.exports = Gameboard;
 
 export default Gameboard;
