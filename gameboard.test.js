@@ -61,7 +61,7 @@ test('placeShip - Placement Out of Bounds (x-coordinate)', () => {
 test('placeShip - Overlapping Placement', () => {
 	const board4 = new Gameboard(5);
 	board4.placeShip(2, 1, 1);
-	const shipF = board4.placeShip(3, 0, 1);
+	const shipF = board4.placeShip(3, 1, 1);
 	expect(shipF).toBe(null);
 	expect(board4.ships.length).toBe(1);
 	expect(board4.grid[1][1] instanceof Ship).toBe(true);
