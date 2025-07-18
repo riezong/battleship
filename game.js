@@ -16,6 +16,9 @@ const game = (function () {
 	player2.gameboard.placeShip(2, 5, 4);
 	player2.gameboard.placeShip(5, 7, 2);
 
+	player1.gameboard.receiveAttack(2, 6);
+	player1.gameboard.receiveAttack(2, 6);
+
 	console.log(player1.gameboard.grid);
 	console.log(player2.gameboard.grid);
 
