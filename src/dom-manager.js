@@ -41,6 +41,10 @@ const domManager = (function () {
 			for (let column = 0; column < gameboard.grid[row].length; column++) {
 				const gridColumn = document.createElement('div');
 				gridColumn.setAttribute('class', 'column');
+
+				gridColumn.dataset.row = row;
+				gridColumn.dataset.column = column;
+
 				const cellContent = gameboard.grid[row][column];
 
 				if (cellContent === 'miss') {
@@ -58,8 +62,19 @@ const domManager = (function () {
 		}
 	};
 
+	const addAttackListeners = function (gridContainerElement, callback) {
+		gridContainerElement.addEventListener('click', (event) => {
+			if (event.target.classList.contains('column')) {
+				const row = event.target.dataset.row;
+				const column = event.target.dataset.column;
+				callback(row, column);
+			}
+		});
+	};
+
 	return {
 		renderPlayerBoard: renderBoard,
+		addAttackListeners: addAttackListeners,
 	};
 })();
 
