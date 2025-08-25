@@ -1,2 +1,2 @@
 import './styles.css';
-import domManager from '../dom-manager';
+import game from '../game';
