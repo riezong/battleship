@@ -26,7 +26,11 @@ const domManager = (function () {
 		}
 	};
 
-	const renderBoard = function (gameboard, gridContainerElement) {
+	const renderBoard = function (
+		gameboard,
+		gridContainerElement,
+		isPlayerBoard = false
+	) {
 		clearBoard(gridContainerElement);
 
 		for (let row = 0; row < gameboard.grid.length; row++) {
@@ -45,7 +49,7 @@ const domManager = (function () {
 				} else if (cellContent === 'hit') {
 					gridColumn.textContent = 'X';
 					gridColumn.classList.add('hit');
-				} else if (cellContent !== null) {
+				} else if (cellContent !== null && isPlayerBoard) {
 					gridColumn.classList.add('ship');
 				}
 

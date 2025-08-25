@@ -1,7 +1,7 @@
 import Ship from '../battleship.js';
 import Gameboard from '../gameboard.js';
 import Player from '../player.js';
-import domManager from '../dom-manager.js';
+import domManager from './dom-manager.js';
 
 const init = function () {};
 
@@ -28,8 +28,8 @@ const game = (function () {
 	const playerBoardElement = document.querySelector('#player-board');
 	const computerBoardElement = document.querySelector('#computer-board');
 
-	domManager.renderPlayerBoard(player1.gameboard, playerBoardElement);
-	domManager.renderPlayerBoard(player2.gameboard, computerBoardElement);
+	domManager.renderPlayerBoard(player1.gameboard, playerBoardElement, true);
+	domManager.renderPlayerBoard(player2.gameboard, computerBoardElement, false);
 
 	return { player1, player2 };
 })();
