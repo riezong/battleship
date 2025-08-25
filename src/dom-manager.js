@@ -37,7 +37,17 @@ const domManager = (function () {
 			for (let column = 0; column < gameboard.grid[row].length; column++) {
 				const gridColumn = document.createElement('div');
 				gridColumn.setAttribute('class', 'column');
-				gridColumn.textContent = `${row},${column}`;
+				const cellContent = gameboard.grid[row][column];
+
+				if (cellContent === 'miss') {
+					gridColumn.textContent = '.';
+					gridColumn.classList.add('miss');
+				} else if (cellContent === 'hit') {
+					gridColumn.textContent = 'X';
+					gridColumn.classList.add('hit');
+				} else if (cellContent !== null) {
+					gridColumn.classList.add('ship');
+				}
 
 				gridRow.appendChild(gridColumn);
 			}
