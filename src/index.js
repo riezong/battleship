@@ -1,2 +1,2 @@
 import './styles.css';
-import game from '../game';
+import game from './game';

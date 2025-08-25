@@ -1,7 +1,7 @@
-import Ship from './battleship.js';
-import Gameboard from './gameboard.js';
-import Player from './player.js';
-import domManager from './dom-manager.js';
+import Ship from '../battleship.js';
+import Gameboard from '../gameboard.js';
+import Player from '../player.js';
+import domManager from '../dom-manager.js';
 
 const init = function () {};
 
