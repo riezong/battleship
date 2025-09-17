@@ -59,7 +59,8 @@ h6 {
 	display: flex;
 	flex-direction: column;
 }
-.game-grid .row {
+.game-grid,
+.row {
 	display: flex;
 	flex-direction: row;
 }
@@ -69,7 +70,7 @@ h6 {
 	aspect-ratio: 1;
 	border: 1px solid whitesmoke;
 	display: flex;
-	flex-direction: column;
+	/* flex-direction: column; */
 	justify-content: center;
 	align-items: center;
 }
@@ -84,4 +85,9 @@ h6 {
 
 .miss {
 	background-color: lightblue;
+}
+
+.grid-row {
+	display: flex;
+	flex-direction: row;
 }
