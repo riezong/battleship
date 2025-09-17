@@ -14,7 +14,7 @@ class Gameboard {
 		this.missedAttacks = [];
 	}
 
-	placeShip(length, yPos, xPos) {
+	placeShip(length, xPos, yPos) {
 		// Check board boundaries
 		const endPos = xPos + length - 1;
 		if (
@@ -53,7 +53,7 @@ class Gameboard {
 		return newShip;
 	}
 
-	receiveAttack(yPos, xPos) {
+	receiveAttack(xPos, yPos) {
 		// Check board boundaries
 		if (
 			xPos < 0 ||
