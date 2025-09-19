@@ -1,11 +1,21 @@
 const container = document.querySelector('.container');
 
-// Render both players' boards
+// Create grid elements
+// Render the boards
+// Attach event listeners
 
 const domManager = (function () {
+	const clearBoard = function (player, gridContainerElement) {
+		const gridContainer = document.getElementById(gridContainerElement);
+		while (gridContainer.firstChild) {
+			gridContainer.removeChild(gridContainer.lastChild);
+		}
+	};
+
 	const renderBoard = function (player, gridContainerElement) {
+		clearBoard(player, gridContainerElement);
+
 		const playerBoard = player.gameboard.grid;
-		console.log(playerBoard.length);
 		const gridContainer = document.getElementById(gridContainerElement);
 
 		// Loop through grid
@@ -16,8 +26,7 @@ const domManager = (function () {
 			for (let j = 0; j < playerBoard[i].length; j++) {
 				const gridSquare = document.createElement('div');
 				gridSquare.classList.add('column');
-				// gridSquare.textContent = `${j},${i}`;
-				// gridSquare.textContent = playerBoard[i][j];
+				gridSquare.setAttribute('id', `${j}-${i}`);
 
 				// Check cellContent
 				const cellContent = playerBoard[i][j];
@@ -41,7 +50,21 @@ const domManager = (function () {
 		}
 	};
 
-	return { renderBoard };
+	// Add event listener for Grid to determine which square (on the CPU board) that the player clicked on. If it's a ship, mark as hit, if not, mark as miss.
+	const addClickListener = function (gridContainerElement, callback) {
+		// Event delegation. Have unique ids for each div to help identify
+		let grid = document.getElementById(gridContainerElement);
+		grid.addEventListener('click', (event) => {
+			let target = event.target.id;
+			// console.log(target);
+			// Split the id to separate coordinates to find out the cell value
+			let targetX = target.split('-')[0];
+			let targetY = target.split('-')[1];
+			callback(targetX, targetY);
+		});
+	};
+
+	return { renderBoard, addClickListener };
 })();
 
 export default domManager;
