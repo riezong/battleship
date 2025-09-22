@@ -13,6 +13,7 @@ const domManager = (function () {
 	};
 
 	const renderBoard = function (player, gridContainerElement) {
+		console.log(player);
 		clearBoard(player, gridContainerElement);
 
 		const playerBoard = player.gameboard.grid;
@@ -38,8 +39,13 @@ const domManager = (function () {
 						gridSquare.classList.add('hit');
 						gridSquare.textContent = 'Hit';
 					} else {
-						gridSquare.classList.add('ship');
-						gridSquare.textContent = 'Ship';
+						// Hide CPU ships from board
+						if (player.name === 'human') {
+							gridSquare.classList.add('ship');
+							gridSquare.textContent = 'Ship';
+						} else {
+							gridSquare.textContent = `${j},${i}`;
+						}
 					}
 				} else {
 					gridSquare.textContent = `${j},${i}`;
