@@ -52,7 +52,17 @@ h6 {
 	isolation: isolate;
 }
 
-.container {
+.game-container {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	width: 90vw;
+	height: 90vh;
+}
+
+.left,
+.right {
+	width: 50%;
 }
 
 .grid1 {
