@@ -7,7 +7,7 @@ const Game = function () {
 	const human = new Player('Human');
 	const cpu = new Player('CPU');
 
-	let currentPlayer = 'human';
+	let currentPlayer = human;
 
 	const init = (function () {
 		human.gameboard.placeShip(2, 5, 9);
@@ -21,6 +21,15 @@ const Game = function () {
 
 		domManager.renderBoard(human, 'human-board');
 		domManager.renderBoard(cpu, 'cpu-board');
+
+		// Add Event Listeners to init
+		domManager.addAttackListeners('cpu-board', (x, y) => {
+			playRound(parseInt(x), parseInt(y));
+		});
+
+		// domManager.addAttackListeners('human-board', (x, y) => {
+		// 	console.log(`Coordinates ${x}, ${y} on human board`);
+		// });
 	})();
 
 	const switchPlayer = function () {
@@ -29,9 +38,8 @@ const Game = function () {
 
 	const checkGameOver = function (player1, player2) {
 		if (player1.gameboard.allShipsSunk() || player2.gameboard.allShipsSunk()) {
-			return true;
-		} else {
-			return false;
+			console.log(`${currentPlayer.name} wins!`);
+			return;
 		}
 	};
 
@@ -42,35 +50,29 @@ const Game = function () {
 		switchPlayer();
 	};
 
-	const addEventListeners = (function () {
-		domManager.addClickListener('cpu-board', (x, y) => {
-			console.log(`Coordinates ${x}, ${y} on CPU board`);
-			humanPlayerMove(x, y);
-			switchPlayer();
-		});
-		domManager.addClickListener('human-board', (x, y) => {
-			console.log(`Coordinates ${x}, ${y} on human board`);
-		});
-	})();
-
 	const cpuPlayerMove = function () {
 		let randomMoveX = Math.floor(Math.random() * human.gameboard.gridSize);
 		let randomMoveY = Math.floor(Math.random() * human.gameboard.gridSize);
 		human.gameboard.receiveAttack(randomMoveX, randomMoveY);
 		domManager.renderBoard(human, 'human-board');
+	};
 
+	const playRound = function (x, y) {
+		console.log(currentPlayer);
+		if (currentPlayer === human) {
+			cpu.gameboard.receiveAttack(x, y);
+			domManager.renderBoard(cpu, 'cpu-board');
+			checkGameOver(human, cpu);
+			switchPlayer();
+		}
+		setTimeout(() => {
+			cpuPlayerMove();
+		}, 500);
+		checkGameOver(human, cpu);
 		switchPlayer();
 	};
 
-	const playRound = function () {
-		if (currentPlayer === 'human') {
-			switchPlayer();
-		} else {
-			cpuPlayerMove();
-		}
-	};
-
-	playRound();
+	// playRound();
 };
 
 Game();

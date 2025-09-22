@@ -51,7 +51,7 @@ const domManager = (function () {
 	};
 
 	// Add event listener for Grid to determine which square (on the CPU board) that the player clicked on. If it's a ship, mark as hit, if not, mark as miss.
-	const addClickListener = function (gridContainerElement, callback) {
+	const addAttackListeners = function (gridContainerElement, callback) {
 		// Event delegation. Have unique ids for each div to help identify
 		let grid = document.getElementById(gridContainerElement);
 		grid.addEventListener('click', (event) => {
@@ -64,7 +64,7 @@ const domManager = (function () {
 		});
 	};
 
-	return { renderBoard, addClickListener };
+	return { renderBoard, addAttackListeners };
 })();
 
 export default domManager;
