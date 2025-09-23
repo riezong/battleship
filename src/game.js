@@ -8,7 +8,6 @@ const Game = function () {
 	const cpu = new Player('CPU');
 
 	let currentPlayer = human;
-	let targetPlayer = cpu;
 
 	const init = (function () {
 		human.gameboard.placeShip(2, 5, 9);
@@ -23,67 +22,72 @@ const Game = function () {
 		domManager.renderBoard(human, 'human-board');
 		domManager.renderBoard(cpu, 'cpu-board');
 
-		// Add Event Listeners to init
+		// Add Event Listeners
 		domManager.addAttackListeners('cpu-board', (x, y) => {
 			playRound(parseInt(x), parseInt(y));
 		});
-
-		// domManager.addAttackListeners('human-board', (x, y) => {
-		// 	console.log(`Coordinates ${x}, ${y} on human board`);
-		// });
 	})();
 
 	const switchPlayer = function () {
 		currentPlayer = currentPlayer === human ? cpu : human;
 	};
 
-	const checkGameOver = function (player1, player2) {
-		if (player1.gameboard.allShipsSunk() || player2.gameboard.allShipsSunk()) {
+	const checkGameOver = function (targetPlayer) {
+		if (targetPlayer.gameboard.allShipsSunk()) {
 			console.log(`${currentPlayer.name} wins!`);
+			domManager.renderGameOverScreen();
 			return true;
 		} else {
 			return false;
 		}
 	};
 
-	const humanPlayerMove = function (x, y) {
-		cpu.gameboard.receiveAttack(x, y);
-		domManager.renderBoard(cpu, 'cpu-board');
-
-		switchPlayer();
-	};
-
 	const cpuPlayerMove = function () {
-		let randomMoveX = Math.floor(Math.random() * human.gameboard.gridSize);
-		let randomMoveY = Math.floor(Math.random() * human.gameboard.gridSize);
-		human.gameboard.receiveAttack(randomMoveX, randomMoveY);
-		domManager.renderBoard(human, 'human-board');
+		let x, y;
+		let isValidAttack = false;
 
-		switchPlayer();
+		// Loop until legal move
+		while (!isValidAttack) {
+			x = Math.floor(Math.random() * human.gameboard.gridSize);
+			y = Math.floor(Math.random() * human.gameboard.gridSize);
+			// Check for illegal move
+			if (
+				human.gameboard.grid[y][x] !== 'hit' &&
+				human.gameboard.grid[y][x] !== 'miss'
+			) {
+				isValidAttack = true;
+			}
+		}
+
+		playRound(x, y);
+		domManager.renderBoard(human, 'human-board');
 	};
 
 	const playRound = function (x, y) {
-		console.log(currentPlayer);
+		let targetPlayer;
 		if (currentPlayer === human) {
-			humanPlayerMove(x, y);
-			console.log(checkGameOver(human, cpu));
-			if (checkGameOver(human, cpu) === false) {
-				setTimeout(() => {
-					cpuPlayerMove();
-				}, 500);
-				checkGameOver(human, cpu);
-			}
+			targetPlayer = cpu;
+		} else {
+			targetPlayer = human;
 		}
-		// else if (currentPlayer === cpu) {
-		// 	setTimeout(() => {
-		// 		cpuPlayerMove();
-		// 	}, 500);
-		// }
 
-		// checkGameOver(human, cpu);
+		const attackResult = targetPlayer.gameboard.receiveAttack(x, y);
+		console.log(
+			`${currentPlayer.name} attacks ${targetPlayer.name} at [${x}, ${y}]. Result: ${attackResult}`
+		);
+		domManager.renderBoard(cpu, 'cpu-board');
+
+		switchPlayer();
+
+		if (checkGameOver(targetPlayer)) {
+			console.log(`${currentPlayer.name} wins!`);
+			return;
+		}
+
+		if (currentPlayer === cpu) {
+			cpuPlayerMove();
+		}
 	};
-
-	// playRound();
 };
 
 Game();

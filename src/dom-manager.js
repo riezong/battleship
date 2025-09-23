@@ -13,7 +13,7 @@ const domManager = (function () {
 	};
 
 	const renderBoard = function (player, gridContainerElement) {
-		console.log(player);
+		// console.log(player);
 		clearBoard(player, gridContainerElement);
 
 		const playerBoard = player.gameboard.grid;
@@ -26,7 +26,7 @@ const domManager = (function () {
 			gridContainer.appendChild(gridRow);
 			for (let j = 0; j < playerBoard[i].length; j++) {
 				const gridSquare = document.createElement('div');
-				gridSquare.classList.add('column');
+				gridSquare.classList.add('cell');
 				gridSquare.setAttribute('id', `${j}-${i}`);
 
 				// Check cellContent
@@ -34,9 +34,11 @@ const domManager = (function () {
 				if (cellContent !== null) {
 					if (cellContent === 'miss') {
 						gridSquare.classList.add('miss');
+						gridSquare.classList.add('attacked');
 						gridSquare.textContent = 'Miss';
 					} else if (cellContent === 'hit') {
 						gridSquare.classList.add('hit');
+						gridSquare.classList.add('attacked');
 						gridSquare.textContent = 'Hit';
 					} else {
 						// Hide CPU ships from board
@@ -62,6 +64,11 @@ const domManager = (function () {
 		let grid = document.getElementById(gridContainerElement);
 		grid.addEventListener('click', (event) => {
 			let target = event.target.id;
+
+			// If the target doesn't have the 'cell' class, stop immediately.
+			if (!event.target.classList.contains('cell')) {
+				return;
+			}
 			// console.log(target);
 			// Split the id to separate coordinates to find out the cell value
 			let targetX = target.split('-')[0];
@@ -70,7 +77,16 @@ const domManager = (function () {
 		});
 	};
 
-	return { renderBoard, addAttackListeners };
+	const renderGameOverScreen = function () {
+		const gameOver = document.getElementById('game-over');
+		gameOver.classList.toggle('hidden');
+	};
+
+	return {
+		renderBoard: renderBoard,
+		addAttackListeners: addAttackListeners,
+		renderGameOverScreen: renderGameOverScreen,
+	};
 })();
 
 export default domManager;
