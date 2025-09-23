@@ -25,7 +25,7 @@ class Gameboard {
 			this.gridSize <= yPos
 		) {
 			console.error(
-				`Cannot place ship: Out of bounds at [${yPos}, ${xPos}] for length ${length}.`
+				`Cannot place ship: Out of bounds at [${xPos}, ${yPos}] for length ${length}.`
 			);
 			return null;
 		}
@@ -61,7 +61,7 @@ class Gameboard {
 			yPos < 0 ||
 			this.gridSize <= yPos
 		) {
-			console.error(`Attack out of bounds: [${yPos}, ${xPos}].`);
+			console.error(`Attack out of bounds: [${xPos}, ${yPos}].`);
 			return null;
 		}
 
@@ -69,7 +69,7 @@ class Gameboard {
 
 		// Prevent Duplicate Attacks
 		if (targetCell === 'hit' || targetCell === 'miss') {
-			console.warn(`Coordinate [${yPos}, ${xPos}] has already been attacked.`);
+			console.warn(`Coordinate [${xPos}, ${yPos}] has already been attacked.`);
 			return null;
 		}
 
@@ -78,12 +78,12 @@ class Gameboard {
 			const hitShip = targetCell;
 			hitShip.hit();
 			this.grid[yPos][xPos] = 'hit';
-			console.log('Target ship hit!');
+			// console.log('Target ship hit!');
 			return true;
 		} else {
 			this.grid[yPos][xPos] = 'miss';
-			this.missedAttacks.push([yPos, xPos]);
-			console.log('Missed!');
+			this.missedAttacks.push([xPos, yPos]);
+			// console.log('Missed!');
 			return false;
 		}
 	}
