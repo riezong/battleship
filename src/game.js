@@ -77,12 +77,12 @@ const Game = function () {
 		);
 		domManager.renderBoard(cpu, 'cpu-board');
 
-		switchPlayer();
-
 		if (checkGameOver(targetPlayer)) {
 			console.log(`${currentPlayer.name} wins!`);
 			return;
 		}
+
+		switchPlayer();
 
 		if (currentPlayer === cpu) {
 			cpuPlayerMove();
