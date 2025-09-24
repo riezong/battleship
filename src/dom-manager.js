@@ -58,8 +58,27 @@ const domManager = (function () {
 		}
 	};
 
-	// Add event listener for Grid to determine which square (on the CPU board) that the player clicked on. If it's a ship, mark as hit, if not, mark as miss.
+	// Add event listener for Grid to determine which square (on the human board) that the player clicked on.
 	const addAttackListeners = function (gridContainerElement, callback) {
+		// Event delegation. Have unique ids for each div to help identify
+		let grid = document.getElementById(gridContainerElement);
+		grid.addEventListener('click', (event) => {
+			let target = event.target.id;
+
+			// If the target doesn't have the 'cell' class, stop immediately.
+			if (!event.target.classList.contains('cell')) {
+				return;
+			}
+			// console.log(target);
+			// Split the id to separate coordinates to find out the cell value
+			let targetX = target.split('-')[0];
+			let targetY = target.split('-')[1];
+			callback(targetX, targetY);
+		});
+	};
+
+	// Add event listener for Grid to determine which square (on the CPU board) that the player clicked on. If it's a ship, mark as hit, if not, mark as miss.
+	const addShipListeners = function (gridContainerElement, callback) {
 		// Event delegation. Have unique ids for each div to help identify
 		let grid = document.getElementById(gridContainerElement);
 		grid.addEventListener('click', (event) => {
@@ -91,6 +110,7 @@ const domManager = (function () {
 
 	return {
 		renderBoard: renderBoard,
+		addShipListeners: addShipListeners,
 		addAttackListeners: addAttackListeners,
 		renderGameOverScreen: renderGameOverScreen,
 	};

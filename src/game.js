@@ -8,6 +8,7 @@ const Game = function () {
 	const cpu = new Player('CPU');
 
 	let currentPlayer = human;
+	let shipCounter = 0;
 
 	const shipLibrary = {
 		carrier: 5,
@@ -15,6 +16,23 @@ const Game = function () {
 		cruiser: 3,
 		submarine: 3,
 		patrol: 2,
+	};
+
+	const totalShips = Object.keys(shipLibrary).length;
+
+	const manualPlaceShip = function (x, y) {
+		// Only for human
+
+		// One click for each ship. Place from longest ship to shortest
+		// Iterate down the shipLibrary to determine how long each ship is and how many ships left to place
+		if (shipCounter < Object.keys(shipLibrary).length) {
+			const currentShip = Object.keys(shipLibrary)[shipCounter];
+			human.gameboard.placeShip(shipLibrary[currentShip], x, y);
+			shipCounter++;
+		}
+
+		console.log(shipCounter);
+		domManager.renderBoard(human, 'human-board');
 	};
 
 	const randomPlaceShip = function (player) {
@@ -41,9 +59,6 @@ const Game = function () {
 	};
 
 	const init = (function () {
-		randomPlaceShip(human);
-		randomPlaceShip(cpu);
-
 		console.log(human.gameboard.grid);
 		console.log(cpu.gameboard.grid);
 
@@ -51,10 +66,22 @@ const Game = function () {
 		domManager.renderBoard(cpu, 'cpu-board');
 
 		// Add Event Listeners
+		domManager.addShipListeners('human-board', (x, y) => {
+			manualPlaceShip(parseInt(x), parseInt(y));
+		});
 		domManager.addAttackListeners('cpu-board', (x, y) => {
 			playRound(parseInt(x), parseInt(y));
 		});
 	})();
+
+	const shipPlacementPhase = function () {
+		if (shipCounter < totalShips) {
+			manualPlaceShip();
+		} else {
+			// randomPlaceShip(human);
+			randomPlaceShip(cpu);
+		}
+	};
 
 	const switchPlayer = function () {
 		currentPlayer = currentPlayer === human ? cpu : human;
@@ -105,10 +132,10 @@ const Game = function () {
 		);
 		domManager.renderBoard(cpu, 'cpu-board');
 
-		if (checkGameOver(targetPlayer)) {
-			console.log(`${currentPlayer.name} wins!`);
-			return;
-		}
+		// if (checkGameOver(targetPlayer)) {
+		// 	console.log(`${currentPlayer.name} wins!`);
+		// 	return;
+		// }
 
 		switchPlayer();
 
