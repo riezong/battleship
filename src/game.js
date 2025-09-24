@@ -20,23 +20,28 @@ const Game = function () {
 
 	const totalShips = Object.keys(shipLibrary).length;
 
-	const manualPlaceShip = function (x, y) {
+	const placeShip = function (x, y) {
 		// Only for human
 
 		// One click for each ship. Place from longest ship to shortest
 		// Iterate down the shipLibrary to determine how long each ship is and how many ships left to place
 		if (shipCounter < Object.keys(shipLibrary).length) {
 			const currentShip = Object.keys(shipLibrary)[shipCounter];
-			human.gameboard.placeShip(shipLibrary[currentShip], x, y);
-			shipCounter++;
+
+			// Do not increment if illegal placement
+			if (human.gameboard.placeShip(shipLibrary[currentShip], x, y) !== null) {
+				shipCounter++;
+			}
+		} else {
+			// CPU places ships and starts game
+			gameStart();
 		}
 
-		console.log(shipCounter);
 		domManager.renderBoard(human, 'human-board');
+		domManager.renderBoard(cpu, 'cpu-board');
 	};
 
 	const randomPlaceShip = function (player) {
-		// cpu.gameboard.placeShip(5, 3, 4);
 		let x, y;
 
 		Object.keys(shipLibrary).forEach((key) => {
@@ -51,7 +56,7 @@ const Game = function () {
 				x = Math.floor(Math.random() * player.gameboard.gridSize);
 				y = Math.floor(Math.random() * player.gameboard.gridSize);
 			}
-			player.gameboard.placeShip(shipLibrary[key], x, y);
+
 			console.log(`${player.name} places ${key} at ${x} ${y}`);
 		});
 
@@ -66,21 +71,24 @@ const Game = function () {
 		domManager.renderBoard(cpu, 'cpu-board');
 
 		// Add Event Listeners
-		domManager.addShipListeners('human-board', (x, y) => {
-			manualPlaceShip(parseInt(x), parseInt(y));
-		});
-		domManager.addAttackListeners('cpu-board', (x, y) => {
-			playRound(parseInt(x), parseInt(y));
+		domManager.addCellListeners('human-board', (x, y) => {
+			placeShip(parseInt(x), parseInt(y));
 		});
 	})();
 
-	const shipPlacementPhase = function () {
-		if (shipCounter < totalShips) {
-			manualPlaceShip();
-		} else {
-			// randomPlaceShip(human);
-			randomPlaceShip(cpu);
-		}
+	const gameStart = function () {
+		// CPU to place ships after human finishes placing ships
+		randomPlaceShip(cpu);
+		console.log(human.gameboard.grid);
+		console.log(cpu.gameboard.grid);
+
+		// Disable click on human grid
+		domManager.removeCellListeners('human-board');
+
+		// Turn on click on cpu grid
+		domManager.addCellListeners('cpu-board', (x, y) => {
+			playRound(parseInt(x), parseInt(y));
+		});
 	};
 
 	const switchPlayer = function () {
