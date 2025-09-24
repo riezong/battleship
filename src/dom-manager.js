@@ -77,9 +77,16 @@ const domManager = (function () {
 		});
 	};
 
-	const renderGameOverScreen = function () {
+	const renderGameOverScreen = function (winner) {
 		const gameOver = document.getElementById('game-over');
 		gameOver.classList.toggle('hidden');
+
+		console.log(`${winner} wins!`);
+
+		const gameOverMsg = document.getElementById('game-over-message');
+		const msg = document.createElement('div');
+		msg.textContent = `${winner} wins!`;
+		gameOverMsg.appendChild(msg);
 	};
 
 	return {

@@ -35,7 +35,7 @@ const Game = function () {
 	const checkGameOver = function (targetPlayer) {
 		if (targetPlayer.gameboard.allShipsSunk()) {
 			console.log(`${currentPlayer.name} wins!`);
-			domManager.renderGameOverScreen();
+			domManager.renderGameOverScreen(currentPlayer.name);
 			return true;
 		} else {
 			return false;
