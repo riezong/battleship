@@ -9,12 +9,40 @@ const Game = function () {
 
 	let currentPlayer = human;
 
-	const init = (function () {
-		human.gameboard.placeShip(2, 5, 9);
-		cpu.gameboard.placeShip(5, 3, 4);
+	const shipLibrary = {
+		carrier: 5,
+		battleship: 4,
+		cruiser: 3,
+		submarine: 3,
+		patrol: 2,
+	};
 
-		human.gameboard.receiveAttack(5, 9);
-		cpu.gameboard.receiveAttack(4, 5);
+	const randomPlaceShip = function (player) {
+		// cpu.gameboard.placeShip(5, 3, 4);
+		let x, y;
+
+		Object.keys(shipLibrary).forEach((key) => {
+			console.log(key, shipLibrary[key]);
+
+			x = Math.floor(Math.random() * player.gameboard.gridSize);
+			y = Math.floor(Math.random() * player.gameboard.gridSize);
+
+			// Loop until legal placement
+			// Since placeShip returns null for invalid placements, use that to check for illegal placement
+			while (player.gameboard.placeShip(shipLibrary[key], x, y) === null) {
+				x = Math.floor(Math.random() * player.gameboard.gridSize);
+				y = Math.floor(Math.random() * player.gameboard.gridSize);
+			}
+			player.gameboard.placeShip(shipLibrary[key], x, y);
+			console.log(`${player.name} places ${key} at ${x} ${y}`);
+		});
+
+		console.log(`${player.name}'s ship placement complete`);
+	};
+
+	const init = (function () {
+		randomPlaceShip(human);
+		randomPlaceShip(cpu);
 
 		console.log(human.gameboard.grid);
 		console.log(cpu.gameboard.grid);

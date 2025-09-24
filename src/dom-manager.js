@@ -42,7 +42,7 @@ const domManager = (function () {
 						gridSquare.textContent = 'Hit';
 					} else {
 						// Hide CPU ships from board
-						if (player.name === 'human') {
+						if (player.name === 'Human') {
 							gridSquare.classList.add('ship');
 							gridSquare.textContent = 'Ship';
 						} else {
