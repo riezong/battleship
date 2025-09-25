@@ -36,7 +36,6 @@ const Game = function () {
 
 					if (shipCounter >= Object.keys(shipLibrary).length) {
 						// CPU places ships and starts game
-						switchPlayer();
 						gameStart();
 					}
 				}
