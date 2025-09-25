@@ -93,8 +93,6 @@ const domManager = (function () {
 		let grid = document.getElementById(gridContainerElement);
 
 		if (gridContainerElement === 'human-board') {
-			console.log(gridContainerElement);
-			console.log(humanShipClickHandler);
 			if (humanShipClickHandler) {
 				grid.removeEventListener('click', humanShipClickHandler);
 				console.log(`${gridContainerElement}'s listeners are disabled`);

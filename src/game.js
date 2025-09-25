@@ -22,15 +22,20 @@ const Game = function () {
 
 	const placeShip = function (x, y) {
 		// Only for human
+		if (currentPlayer === human) {
+			// One click for each ship. Place from longest ship to shortest
+			// Iterate down the shipLibrary to determine how long each ship is and how many ships left to place
+			if (shipCounter < Object.keys(shipLibrary).length) {
+				const currentShip = Object.keys(shipLibrary)[shipCounter];
 
-		// One click for each ship. Place from longest ship to shortest
-		// Iterate down the shipLibrary to determine how long each ship is and how many ships left to place
-		if (shipCounter < Object.keys(shipLibrary).length) {
-			const currentShip = Object.keys(shipLibrary)[shipCounter];
-
-			// Do not increment if illegal placement
-			if (human.gameboard.placeShip(shipLibrary[currentShip], x, y) !== null) {
-				shipCounter++;
+				// Do not increment if illegal placement
+				if (
+					human.gameboard.placeShip(shipLibrary[currentShip], x, y) !== null
+				) {
+					shipCounter++;
+				}
+			} else {
+				switchPlayer();
 			}
 		} else {
 			// CPU places ships and starts game
@@ -61,6 +66,9 @@ const Game = function () {
 		});
 
 		console.log(`${player.name}'s ship placement complete`);
+		domManager.renderBoard(player, 'human-board');
+
+		switchPlayer();
 	};
 
 	const init = (function () {
@@ -70,10 +78,14 @@ const Game = function () {
 		domManager.renderBoard(human, 'human-board');
 		domManager.renderBoard(cpu, 'cpu-board');
 
-		// Add Event Listeners
+		// Attach event listeners to human grid
 		domManager.addCellListeners('human-board', (x, y) => {
 			placeShip(parseInt(x), parseInt(y));
 		});
+
+		document
+			.getElementById('random-place-ship')
+			.addEventListener('click', () => randomPlaceShip(human));
 	})();
 
 	const gameStart = function () {
@@ -85,7 +97,7 @@ const Game = function () {
 		// Disable click on human grid
 		domManager.removeCellListeners('human-board');
 
-		// Turn on click on cpu grid
+		// Attach event listeners to cpu grid
 		domManager.addCellListeners('cpu-board', (x, y) => {
 			playRound(parseInt(x), parseInt(y));
 		});
@@ -140,10 +152,10 @@ const Game = function () {
 		);
 		domManager.renderBoard(cpu, 'cpu-board');
 
-		// if (checkGameOver(targetPlayer)) {
-		// 	console.log(`${currentPlayer.name} wins!`);
-		// 	return;
-		// }
+		if (checkGameOver(targetPlayer)) {
+			console.log(`${currentPlayer.name} wins!`);
+			return;
+		}
 
 		switchPlayer();
 
