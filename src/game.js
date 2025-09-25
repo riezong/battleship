@@ -33,13 +33,14 @@ const Game = function () {
 					human.gameboard.placeShip(shipLibrary[currentShip], x, y) !== null
 				) {
 					shipCounter++;
+
+					if (shipCounter >= Object.keys(shipLibrary).length) {
+						// CPU places ships and starts game
+						switchPlayer();
+						gameStart();
+					}
 				}
-			} else {
-				switchPlayer();
 			}
-		} else {
-			// CPU places ships and starts game
-			gameStart();
 		}
 
 		domManager.renderBoard(human, 'human-board');
@@ -66,9 +67,14 @@ const Game = function () {
 		});
 
 		console.log(`${player.name}'s ship placement complete`);
-		domManager.renderBoard(player, 'human-board');
+		domManager.renderBoard(human, 'human-board');
+		domManager.renderBoard(cpu, 'cpu-board');
 
-		switchPlayer();
+		// Start game after placing all of human ships
+		if (player === human) {
+			// CPU places ships and starts game
+			gameStart();
+		}
 	};
 
 	const init = (function () {
